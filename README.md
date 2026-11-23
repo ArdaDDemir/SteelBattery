@@ -60,6 +60,11 @@ Kodu değiştirdikten sonra `build.bat` ve ardından `install.bat` çalıştırm
 - Sadece Windows 10 görev çubuğu (Windows 11'in görev çubuğu farklı çalışır).
 - Sadece ana monitördeki görev çubuğu.
 
+## Lisans
+
+[MIT](LICENSE). SteelSeries, Arctis, Aerox ve Apex SteelSeries ApS'nin markalarıdır; bu proje SteelSeries ile
+bağlantılı değildir.
+
 ## Klasörler
 
 ```
