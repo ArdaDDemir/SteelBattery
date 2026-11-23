@@ -1,0 +1,5 @@
+# Build output (exe, obj, test binaries, OLED previews)
+out/
+*.obj
+*.pdb
+*.ilk
