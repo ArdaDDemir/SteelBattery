@@ -1,7 +1,7 @@
 # SteelBattery
 
 Kablosuz SteelSeries cihazlarının pil yüzdesini Windows görev çubuğunda, saatin hemen solunda gösterir.
-Tek dosyalık, kurulumsuz, ~200 KB'lık bir C++ uygulaması.
+Tek exe, ek kütüphane yok, ~200 KB'lık bir C++ uygulaması.
 
 ```
 🎧 ▮▮▮▯ 82% ⚡   🖱 ▮▮▮▯ 75%
