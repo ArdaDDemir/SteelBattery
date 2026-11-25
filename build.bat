@@ -14,10 +14,17 @@ cl %CF% /O2 /Feout\decode_test.exe tests\decode_test.cpp src\battery.cpp setupap
 out\decode_test.exe || exit /b 1
 cl %CF% /O2 /Feout\history_test.exe tests\history_test.cpp src\history.cpp || exit /b 1
 out\history_test.exe || exit /b 1
-cl %CF% /O2 /Feout\oled_preview.exe tests\oled_preview.cpp src\oled.cpp src\render.cpp src\history.cpp ^
+cl %CF% /O2 /Feout\poll_once.exe tests\poll_once.cpp src\battery.cpp setupapi.lib hid.lib cfgmgr32.lib || exit /b 1
+cl %CF% /O2 /Feout\filter_test.exe tests\filter_test.cpp src\filter.cpp src\stats.cpp || exit /b 1
+out\filter_test.exe || exit /b 1
+cl %CF% /O2 /Feout\stats_preview.exe tests\stats_preview.cpp src\stats.cpp src\statswin.cpp src\render.cpp src\history.cpp ^
+   src\battery.cpp user32.lib gdi32.lib gdiplus.lib shell32.lib dwmapi.lib setupapi.lib hid.lib cfgmgr32.lib ole32.lib || exit /b 1
+cl %CF% /O2 /Feout\oled_preview.exe tests\oled_preview.cpp src\oled.cpp src\render.cpp src\history.cpp src\log.cpp ^
    user32.lib gdi32.lib gdiplus.lib winhttp.lib ole32.lib || exit /b 1
 
-cl %CF% /O1 /Feout\SteelBattery.exe src\main.cpp src\battery.cpp src\render.cpp src\settings.cpp src\history.cpp src\oled.cpp ^
+cl %CF% /O1 /Feout\SteelBattery.exe src\main.cpp src\battery.cpp src\render.cpp src\settings.cpp src\history.cpp ^
+   src\oled.cpp src\log.cpp src\filter.cpp src\stats.cpp src\statswin.cpp ^
    /link /SUBSYSTEM:WINDOWS /MANIFEST:EMBED /MANIFESTINPUT:src\app.manifest ^
-   user32.lib gdi32.lib gdiplus.lib shell32.lib advapi32.lib setupapi.lib hid.lib cfgmgr32.lib winhttp.lib ole32.lib || exit /b 1
+   user32.lib gdi32.lib gdiplus.lib shell32.lib advapi32.lib setupapi.lib hid.lib cfgmgr32.lib winhttp.lib ole32.lib ^
+   dwmapi.lib || exit /b 1
 echo Built out\SteelBattery.exe

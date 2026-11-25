@@ -6,6 +6,8 @@
 #include <hidsdi.h>
 #include <hidpi.h>
 #include <devpropdef.h>
+#include <winioctl.h>
+#include <hidclass.h>
 
 #include <algorithm>
 #include <cwctype>
@@ -125,7 +127,13 @@ Reading Query(const std::wstring& path, const Spec& s) {
     out[1] = s.cmd;
     // SET_REPORT over the control pipe. The Aerox dongle ignores interrupt writes while SteelSeries GG
     // streams lighting to it; fall back to WriteFile for anything that rejects SET_REPORT.
-    bool sent = HidD_SetOutputReport(h, out.data(), (ULONG)out.size()) != FALSE;
+    // Same request HidD_SetOutputReport makes, but overlapped so a receiver that never answers
+    // cannot hang the poll (HidD_SetOutputReport has no timeout).
+    DWORD unused = 0;
+    bool sent = Finish(h, ov,
+                       DeviceIoControl(h, IOCTL_HID_SET_OUTPUT_REPORT, out.data(), (DWORD)out.size(), nullptr, 0, &unused, &ov),
+                       500) >= 0;
+    ResetEvent(ov.hEvent);
     if (!sent) sent = Finish(h, ov, WriteFile(h, out.data(), (DWORD)out.size(), nullptr, &ov), 500) >= 0;
     if (sent) {
         std::vector<uint8_t> in(caps.InputReportByteLength);
@@ -139,6 +147,7 @@ Reading Query(const std::wstring& path, const Spec& s) {
             if (n < 0) break;
             if (n >= 2 && in[1] == s.cmd) {
                 r = s.kind == Kind::Headset ? DecodeNova(in.data(), (size_t)n) : DecodeAerox(in.data(), (size_t)n, s.cmd);
+                for (size_t i = 0; i < 6 && i < (size_t)n; ++i) r.raw[i] = in[i];
                 break;
             }
         }

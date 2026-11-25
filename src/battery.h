@@ -8,6 +8,7 @@ struct Reading {
     bool ok = false;
     int percent = 0;
     bool charging = false;
+    uint8_t raw[6] = {};  // first bytes of the device's reply, for the diagnostic log
 };
 
 // buf is a raw Windows HID input report: buf[0] = report ID, buf[1] = echoed command.

@@ -652,3 +652,10 @@ bool SaveOledPng(const std::vector<uint8_t>& bits, const wchar_t* path, int scal
         if (wcscmp(codecs[i].MimeType, L"image/png") == 0) return bmp.Save(path, &codecs[i].Clsid, nullptr) == G::Ok;
     return false;
 }
+
+void PaintDeviceIcon(HDC dc, Kind k, float x, float y, float size, COLORREF color) {
+    G::Graphics g(dc);
+    g.SetSmoothingMode(G::SmoothingModeAntiAlias);
+    g.SetPixelOffsetMode(G::PixelOffsetModeHighQuality);
+    DrawDeviceIcon(g, k, x, y, size, G::Color(255, GetRValue(color), GetGValue(color), GetBValue(color)));
+}

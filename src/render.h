@@ -37,5 +37,8 @@ int OledPhases(const std::vector<DeviceStatus>& devs);
 // Debug helper: saves an OLED image scaled up as PNG.
 bool SaveOledPng(const std::vector<uint8_t>& bits, const wchar_t* path, int scale);
 
+// Draws one of the device icons onto any DC (used by the statistics window).
+void PaintDeviceIcon(HDC dc, Kind k, float x, float y, float size, COLORREF color);
+
 void InitGraphics();
 void ShutdownGraphics();

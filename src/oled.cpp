@@ -49,9 +49,13 @@ int Post(const std::string& address, const wchar_t* path, const std::string& bod
     std::wstring host(address.begin(), address.begin() + colon);
     INTERNET_PORT port = (INTERNET_PORT)atoi(address.c_str() + colon + 1);
     int status = 0;
-    HINTERNET ses = WinHttpOpen(L"SteelBattery", WINHTTP_ACCESS_TYPE_NO_PROXY, nullptr, nullptr, 0);
+    // One session for the life of the thread (the charging animation posts every 0.7 s).
+    static HINTERNET ses = [] {
+        HINTERNET h = WinHttpOpen(L"SteelBattery", WINHTTP_ACCESS_TYPE_NO_PROXY, nullptr, nullptr, 0);
+        if (h) WinHttpSetTimeouts(h, 2000, 2000, 2000, 2000);
+        return h;
+    }();
     if (!ses) return 0;
-    WinHttpSetTimeouts(ses, 2000, 2000, 2000, 2000);
     if (HINTERNET con = WinHttpConnect(ses, host.c_str(), port, 0)) {
         if (HINTERNET req = WinHttpOpenRequest(con, L"POST", path, nullptr, nullptr, nullptr, 0)) {
             const wchar_t* hdr = L"Content-Type: application/json\r\n";
@@ -66,7 +70,6 @@ int Post(const std::string& address, const wchar_t* path, const std::string& bod
         }
         WinHttpCloseHandle(con);
     }
-    WinHttpCloseHandle(ses);
     return status;
 }
 

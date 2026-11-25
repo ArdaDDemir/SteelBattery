@@ -16,7 +16,12 @@ Tek exe, ek kütüphane yok, ~200 KB'lık bir C++ uygulaması.
 - **Klavye ekranı**: Apex 7 / Apex Pro OLED ekranında pil durumu (SteelSeries GG üzerinden), şarj animasyonu.
 - **Bluetooth**: Windows'un pil bilgisini bildiği bağlı Bluetooth cihazlar (ör. Xbox kumandası).
 - **Düşük pil uyarısı**: eşik altında kırmızı yazı ve Windows bildirimi.
-- **Ayarlar** (sağ tık): uyarı eşiği, yenileme sıklığı, klavye ekranı, Bluetooth, Windows ile başlat.
+- **Kullanım istatistikleri**: her cihaz için bugün / 7 / 30 gün aktif kullanım, uyku ve şarj süresi, şarj sayısı,
+  harcanan pil, saatte tüketim ve "tam şarjla ~X saat"; son 14 günün grafiği. Veriler `stats.csv` olarak saklanır (Excel'de açılır).
+- **Oyunda sessiz**: tam ekran bir uygulama öndeyken hiçbir pencereye dokunmaz (görev çubuğu, kart, bildirim);
+  bildirim oyundan çıkınca gösterilir.
+- **Hatalı okuma filtresi**: tek seferlik saçma değerler (ör. %75 iken bir anlık %10) ikinci bir okumayla doğrulanmadan gösterilmez.
+- **Ayarlar** (sağ tık): uyarı eşiği, yenileme sıklığı, klavye ekranı, Bluetooth, Windows ile başlat, istatistikler, günlük dosyası.
 
 ## Desteklenen cihazlar
 
@@ -53,7 +58,10 @@ Kodu değiştirdikten sonra `build.bat` ve ardından `install.bat` çalıştırm
 - Görev çubuğu: `Shell_TrayWnd` içine katmanlı (per-pixel alpha) bir alt pencere yerleştirilir,
   görev düğmeleri alanı (`ReBarWindow32`) yer açmak için daraltılır. Explorer yeniden başlarsa kendini yeniden yerleştirir.
 - Klavye ekranı: SteelSeries GG'nin yerel GameSense API'sine (`coreProps.json` adresi) 128x40 tek bitlik görüntü gönderilir.
-- Ayarlar `HKCU\Software\SteelBattery`, pil geçmişi `%LOCALAPPDATA%\SteelBattery\history.txt` içinde tutulur.
+- Ayarlar `HKCU\Software\SteelBattery`; pil geçmişi (`history.txt`), kullanım istatistikleri (`stats.csv`) ve
+  tanılama günlüğü (`log.txt`: tutulan şüpheli okumalar, odağı alan pencereler, takılan okumalar)
+  `%LOCALAPPDATA%\SteelBattery` içinde tutulur.
+- Okuma takılmaya karşı korumalı: cihaza istek zaman aşımlı gönderilir, 20 sn'de sonuç gelmeyen okuma bırakılıp yenisi başlatılır.
 
 ## Bilinen sınırlar
 
